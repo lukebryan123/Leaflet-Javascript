@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Leaflet Day 1</title>
+
+    <!-- leaflet css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+    <!-- Importing data (from a superimposed JS file) -->
+    <script src="TOWNSSURVEY_POLYM.js"></script>    
+    <style>
+        #map{
+            width:70%;
+            height:88vh;
+            position: relative;
+            top: 10vh;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding:0;">
+    <div id="map"></div>
+</body>
+</html>
+
+<!-- leaflet js -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<script>
+    // map intialization
+    var map = L.map('map').setView([42.3, -71.8], 8);
+
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    osm.addTo(map);
+
+    //////////////////////////
+    //     GEOJSON WORK     //
+    //////////////////////////
+
+    L.geoJSON(trialJson, {
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup(feature.properties.TOWN)
+        },
+        style: {
+            fillColor: "green",
+            color: "black",
+            fillOpacity: 0.5,
+            weight: 1
+        }
+    }).addTo(map)
+
+    //////////////////////////
+    //   HIGHLIGHT FEATURE  //
+    //////////////////////////
+    function highlightFeature(e){
+        trialJson.on("click", function(e){
+            var layer = e.target;
+            console.log("hi")
+        })
+        var layer = e.target;
+
+        layer.setStyle({
+            weight:5,
+            fillColor:"yellow",
+            fillOpacity:1
+        });
+        console.log(e.TOWN)
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge){
+            layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties);
+    }
+</script>
